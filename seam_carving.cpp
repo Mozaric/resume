@@ -22,9 +22,9 @@ void TwoDAlloc_int(int** ptr, int row, int column);
 /*=============================
 IplImage* cvLoadImage(char* file_name, int flag);
 flags:
-	CV_LOAD_IMAGE_UNCHANGED	   -1  ≠Ïπœºvπ≥
-	CV_LOAD_IMAGE_GRAYSCALE		0  ¶«∂•
-	CV_LOAD_IMAGE_COLOR			1  ±m¶‚
+	CV_LOAD_IMAGE_UNCHANGED	   -1  ÂéüÂúñÂΩ±ÂÉè
+	CV_LOAD_IMAGE_GRAYSCALE		0  ÁÅ∞Èöé
+	CV_LOAD_IMAGE_COLOR			1  ÂΩ©Ëâ≤
 ----	---------------------------
 image_in = cvLoadImage("test.bmp", CV_LOAD_IMAGE_UNCHANGED);
 ===============================
@@ -46,8 +46,8 @@ channels:
 IplImage *image_gray = cvCreateImage(cvSize(800, 600), IPL_DEPTH_8U, 1);
 =============================*/
 
-int main(int argc, char** argv) {
-
+int main(int argc, char** argv)
+{
 	//Get Image File Name
 	cout << "Please Enter the Image File Name: ";
 	char* chInput = new char[256];
@@ -70,18 +70,19 @@ int main(int argc, char** argv) {
 	image_in = cvLoadImage(chInput, CV_LOAD_IMAGE_COLOR);
 
 	//Seam Carving Loop
-	//¶≥§@±i≠Ï©l±m¶‚πœ(m*n)
-	//®œ•Œ®‰±m¶‚πœ(m*n)≠p∫‚¶«∂•πœ(m*n)
-	//®œ•Œ¶«∂•πœ(m*n)≠p∫‚Sobel Edge Detection(m*n)
-	//®œ•Œsobel(m*n), ±m¶‚πœ(m*n) ∂i¶Êseam carving •i±o§@±m¶‚πœ((m-1)*n)
+	//Êúâ‰∏ÄÂºµÂéüÂßãÂΩ©Ëâ≤Âúñ(m*n)
+	//‰ΩøÁî®ÂÖ∂ÂΩ©Ëâ≤Âúñ(m*n)Ë®àÁÆóÁÅ∞ÈöéÂúñ(m*n)
+	//‰ΩøÁî®ÁÅ∞ÈöéÂúñ(m*n)Ë®àÁÆóSobel Edge Detection(m*n)
+	//‰ΩøÁî®sobel(m*n), ÂΩ©Ëâ≤Âúñ(m*n) ÈÄ≤Ë°åseam carving ÂèØÂæó‰∏ÄÂΩ©Ëâ≤Âúñ((m-1)*n)
 	//
-	//¶A®œ•Œ¶π±m¶‚πœ≠p∫‚®‰¶«∂•πœ
+	//ÂÜç‰ΩøÁî®Ê≠§ÂΩ©Ëâ≤ÂúñË®àÁÆóÂÖ∂ÁÅ∞ÈöéÂúñ
 	//......
 	
 	IplImage* image_color = cvCloneImage(image_in);
 	IplImage* image_out;
 
-	for(int i=0; i<SEAMS_NUM; i++) {
+	for(int i=0; i<SEAMS_NUM; i++)
+	{
 		cout << "Round: " << i << endl;
 		IplImage* image_gray = cvCreateImage(cvSize(image_color->width, image_color->height), IPL_DEPTH_8U, 1);
 		IplImage* image_sobel = cvCreateImage(cvSize(image_color->width, image_color->height), IPL_DEPTH_8U, 1);
@@ -113,33 +114,38 @@ int main(int argc, char** argv) {
 	//Show the Images
 	cvShowImage("Original Image", image_in);
 	cvShowImage("Seam Carving", image_out);
-    cvWaitKey(0);
+	cvWaitKey(0);
+	
 	//Destroy Windows
 	cvDestroyWindow("Original Image");
 	cvDestroyWindow("Seam Carving");
+	
 	//Release Images
-    cvReleaseImage(&image_in);
+	cvReleaseImage(&image_in);
 	cvReleaseImage(&image_out);
 
     return 0;
 }
 
-void RGB2Gray(IplImage* in, IplImage* out) {
-
+void RGB2Gray(IplImage* in, IplImage* out)
+{
 	uchar blue(0), green(0), red(0);
 
 	//Gray Level = (Blue + Green + Red)/3
 	for(int i=0; i<in->height; i++)
-        for(int j=0; j<in->width*3; j=j+3) {
-            blue	= in->imageData[i*in->widthStep+j];
-            green	= in->imageData[i*in->widthStep+j+1];
-            red		= in->imageData[i*in->widthStep+j+2];
+	{
+        	for(int j=0; j<in->width*3; j=j+3)
+		{
+            		blue = in->imageData[i*in->widthStep+j];
+            		green = in->imageData[i*in->widthStep+j+1];
+            		red = in->imageData[i*in->widthStep+j+2];
 			out->imageData[i*out->widthStep+j/3] = (blue+green+red)/3;
 		}
+	}
 }
 
-void SobelOperation(IplImage* in, IplImage* out) {
-
+void SobelOperation(IplImage* in, IplImage* out)
+{
 	int sobel_filter_x[3][3]= {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
 	int sobel_filter_y[3][3]= {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
 	double Gx(0), Gy(0);// Gx -> Gradient of x direction, Gy -> Gradient of y direction
@@ -155,19 +161,27 @@ void SobelOperation(IplImage* in, IplImage* out) {
 
 	//Compute the Gradient Image
 	for(int i=0; i<height; i++)
+	{
 		for(int j=0; j<width; j++)
+		{
 			if ( i==0 || j==0 || i==height-1 || j==width-1 )//Do not use Sobel Operator on Edge Points
 				Gradient[i][j] = 0;
-			else {
+			else
+			{
 				Gx = 0;
 				Gy = 0;
 				for(int m=i-1; m<i+2; m++)
-					for(int n=j-1; n<j+2; n++) {
+				{
+					for(int n=j-1; n<j+2; n++)
+					{
 						Gx += (uchar)(in->imageData[m*widthStep+n])*sobel_filter_x[m-i+1][n-j+1];//sobel operation
 						Gy += (uchar)(in->imageData[m*widthStep+n])*sobel_filter_y[m-i+1][n-j+1];
 					}
+				}
 				Gradient[i][j] = (int)sqrt(Gx*Gx+Gy*Gy);//G = sqrt(Gx^2 + Gy^2)
 			}
+		}
+	}
 
 	//Change the Scale: Min ~ Max -> 0 ~ 255
 	//Find the Maximum and Minimum Gradient value
@@ -175,10 +189,13 @@ void SobelOperation(IplImage* in, IplImage* out) {
 	Gradient_Max = Gradient[1][1];
 	Gradient_Min = Gradient[1][1];
 	for(int i=1; i<height-1; i++)
-		for(int j=1; j<width-1; j++) {
-			if		(Gradient[i][j] > Gradient_Max) Gradient_Max = Gradient[i][j];
-			else if	(Gradient[i][j] < Gradient_Min) Gradient_Min = Gradient[i][j];
+	{
+		for(int j=1; j<width-1; j++)
+		{
+			if(Gradient[i][j] > Gradient_Max) Gradient_Max = Gradient[i][j];
+			else if(Gradient[i][j] < Gradient_Min) Gradient_Min = Gradient[i][j];
 		}
+	}
 
 	//Change the scale
 	//0------------255			scaleA
@@ -186,12 +203,15 @@ void SobelOperation(IplImage* in, IplImage* out) {
 	//scaleB = 255*(scaleA-Min)/(Max-Min)
 	double diff = (double)Gradient_Max-Gradient_Min;
 	for(int i=0; i<height; i++)
-		for(int j=0; j<width; j++) {
+	{
+		for(int j=0; j<width; j++)
+		{
 			Gradient[i][j] = (int)((Gradient[i][j]-Gradient_Min)*255/diff);
 			///////////////////////////////////////////////////
 			//if(Gradient[i][j]<10) Gradient[i][j] = 0;
 			out->imageData[i*widthStep+j] = (uchar)Gradient[i][j];
 		}
+	}
 
 	//Release pointer
 	for(int i=0; i<height; i++)
@@ -199,8 +219,8 @@ void SobelOperation(IplImage* in, IplImage* out) {
 	delete [] Gradient;
 }
 
-IplImage* SeamCarving(IplImage* in_gray, IplImage* in_color, int seams) {
-
+IplImage* SeamCarving(IplImage* in_gray, IplImage* in_color, int seams)
+{
 	int ori_width = in_color->width;
 	int ori_height = in_color->height;
 	int ori_widthStep = in_color->widthStep;
@@ -225,21 +245,25 @@ IplImage* SeamCarving(IplImage* in_gray, IplImage* in_color, int seams) {
 			M[i][j] = abs(in_gray->imageData[i*in_gray->widthStep+j]);
 
 	//Use Gradient Image to find the M Image
-	//≠p∫‚≤÷øn±Ë´◊≠»
+	//Ë®àÁÆóÁ¥ØÁ©çÊ¢ØÂ∫¶ÂÄº
 	for(int i=2; i<ori_height-1; i++)
-		for(int j=1; j<ori_width-1; j++) {
-			if		(j==1)
+	{
+		for(int j=1; j<ori_width-1; j++)
+		{
+			if(j==1)
 				M[i][j] += min(M[i-1][j], M[i-1][j+1]);
-			else if	(j==ori_width-2)
+			else if(j==ori_width-2)
 				M[i][j] += min(M[i-1][j-1], M[i-1][j]);
 			else
 				M[i][j] += min(M[i-1][j-1], min(M[i-1][j], M[i-1][j+1]));
 		}
+	}
 
 	//Copy the bottom value
 	int* bot_value	= new int[ori_width-2];
 	int* bot_no		= new int[ori_width-2];
-	for(int i=1; i<ori_width-1; i++) {
+	for(int i=1; i<ori_width-1; i++)
+	{
 		bot_no[i-1]		= i;
 		bot_value[i-1]	= M[ori_height-2][i];
 	}
@@ -247,8 +271,11 @@ IplImage* SeamCarving(IplImage* in_gray, IplImage* in_color, int seams) {
 	//Bubble Sort
 	int temp(0);
 	for(int i=0; i<ori_width-2; i++)
+	{
 		for(int j=0; j<ori_width-3-i; j++)
-			if(bot_value[j] > bot_value[j+1]) {
+		{
+			if(bot_value[j] > bot_value[j+1])
+			{
 				temp			= bot_value[j];
 				bot_value[j]	= bot_value[j+1];
 				bot_value[j+1]	= temp;
@@ -256,9 +283,12 @@ IplImage* SeamCarving(IplImage* in_gray, IplImage* in_color, int seams) {
 				bot_no[j]		= bot_no[j+1];
 				bot_no[j+1]		= temp;
 			}
+		}
+	}
 
 	//Fine the Seams
-	for(int i=0; i<seams; i++) {
+	for(int i=0; i<seams; i++)
+	{
 		int curr_pos_1 = 0;
 		int curr_pos_2 = 0;
 		int minimum;
@@ -269,7 +299,8 @@ IplImage* SeamCarving(IplImage* in_gray, IplImage* in_color, int seams) {
 
 		seam_map[curr_pos_1][curr_pos_2] = true;
 
-		for(int m=ori_height-3; m>0; m--) {
+		for(int m=ori_height-3; m>0; m--)
+		{
 			if(seam_map[m][curr_pos_2-1])
 				n1 = 100000;
 			else
@@ -309,14 +340,17 @@ IplImage* SeamCarving(IplImage* in_gray, IplImage* in_color, int seams) {
 	int aft_widthStep = out_2->widthStep;
 
 	int j2(0);
-	for(int i=0; i<ori_height; i++) {
+	for(int i=0; i<ori_height; i++)
+	{
 		j2 = 0;
-		for(int j=0; j<ori_width*3; j+=3) {
+		for(int j=0; j<ori_width*3; j+=3)
+		{
 			int index1 = i*ori_widthStep+j;
 			int index2 = i*aft_widthStep+j2;
 			if(seam_map[i][j/3])
 				;
-			else {
+			else
+			{
 				out_2->imageData[index2] = in_color->imageData[index1];
 				out_2->imageData[index2+1] = in_color->imageData[index1+1];
 				out_2->imageData[index2+2] = in_color->imageData[index1+2];
@@ -328,8 +362,8 @@ IplImage* SeamCarving(IplImage* in_gray, IplImage* in_color, int seams) {
 	return out_2;
 }
 
-void TestUchar(IplImage* in) {
-
+void TestUchar(IplImage* in)
+{
 	IplImage* test_i = cvCreateImage(cvSize(in->width, in->height), IPL_DEPTH_8U, 1);
 	IplImage* test_u = cvCreateImage(cvSize(in->width, in->height), IPL_DEPTH_8U, 1);
 	int** test_int;
@@ -337,36 +371,43 @@ void TestUchar(IplImage* in) {
 
 	test_int = new int*[in->height];
 	test_uch = new uchar*[in->height];
-	for(int i=0; i<in->height; i++) {
+	for(int i=0; i<in->height; i++)
+	{
 		*(test_int+i) = new int[in->width];
 		*(test_uch+i) = new uchar[in->width];
 	}
 
 	for(int i=0; i<in->height; i++)
-		for(int j=0; j<in->width; j++) {
+	{
+		for(int j=0; j<in->width; j++)
+		{
 			test_int[i][j] = in->imageData[i*in->widthStep+j];
 			test_uch[i][j] = in->imageData[i*in->widthStep+j];
 			test_int[i][j] = test_int[i][j]/10;
 			test_uch[i][j] = test_uch[i][j]/10;
 		}
+	}
 
 	for(int i=0; i<in->height; i++)
-		for(int j=0; j<in->width; j++) {
+	{
+		for(int j=0; j<in->width; j++)
+		{
 			test_i->imageData[i*in->widthStep+j] = test_int[i][j];
 			test_u->imageData[i*in->widthStep+j] = test_uch[i][j];
 		}
+	}
 
 	cvShowImage("Origin", in);
 	cvShowImage("Test Int", test_i);
 	cvShowImage("Test Uchar", test_u);
-    cvWaitKey(0);
+	cvWaitKey(0);
 	//Destroy Windows
 	cvDestroyWindow("Origin");
-    cvDestroyWindow("Test Int");
-    cvDestroyWindow("Test Uchar");
+	cvDestroyWindow("Test Int");
+	cvDestroyWindow("Test Uchar");
 	//Release Images
 	cvReleaseImage(&test_i);
 	cvReleaseImage(&test_u);
 
-	//µ≤™G≈„•‹°A•ŒUchar Copy∏ÍÆ∆¶A∂i¶Ê≥B≤z∑|§Ò∏˚¶n!!
+	//ÁµêÊûúÈ°ØÁ§∫ÔºåÁî®Uchar CopyË≥áÊñôÂÜçÈÄ≤Ë°åËôïÁêÜÊúÉÊØîËºÉÂ•Ω!!
 }
