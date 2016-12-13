@@ -26,11 +26,11 @@ const int DILATION_TIMES = 2;
 const int CONTOUR_MIN = 8;
 const int CONTOUR_MAX = 50;
 
-int main() {
-
+int main()
+{
 	//refresh random seed
 	unsigned seed;
-    seed = (unsigned)time(NULL);
+	seed = (unsigned)time(NULL);
 	srand(seed);
 
 	//get input file name
@@ -107,11 +107,13 @@ int main() {
 	//draw contours and calculate dice points
 	int dicePoints = 0;
 	src_con = Mat::zeros(src.size(), CV_8UC3);
-	for(size_t i=0; i<contours.size(); ++i) {
+	for(size_t i=0; i<contours.size(); ++i)
+	{
 		int b = rand()%256;
 		int g = rand()%256;
 		int r = rand()%256;
-		if((int)contours.at(i).size() <= CONTOUR_MAX && (int)contours.at(i).size() >= CONTOUR_MIN) {
+		if((int)contours.at(i).size() <= CONTOUR_MAX && (int)contours.at(i).size() >= CONTOUR_MIN)
+		{
 			drawContours(src_con, contours, i, cv::Scalar(b, g, r), 1);
 			dicePoints++;
 		}
