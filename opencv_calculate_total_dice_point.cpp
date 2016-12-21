@@ -24,7 +24,7 @@ const int DILATION_TIMES = 2;
 const int CONTOUR_SIZE_MIN = 8;
 const int CONTOUR_SIZE_MAX = 50;
 
-string getString(string message);
+string getString(const string message);
 
 int main()
 {
@@ -163,7 +163,7 @@ int main()
 	return 0;
 }
 
-string getString(string message)
+string getString(const string message)
 {
 	cout << message;
 
